@@ -199,10 +199,12 @@ var Copy_ = (function(ns) {
 
   function storeId(list, name, id) {
     
-    Log_.functionEntryPoint()
+    Log_.functionEntryPoint();
+    Log_.fine('name: ' + name);
+    Log_.fine('id: ' + id);
     
     for (var nextName in list) {
-      
+    
       if (!list.hasOwnProperty(name)) {
         continue;
       }

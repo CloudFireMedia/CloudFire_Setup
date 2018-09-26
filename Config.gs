@@ -22,13 +22,14 @@
 // =============
 
 var SCRIPT_NAME = "CloudFire"
-var SCRIPT_VERSION = "v0.1"
+var SCRIPT_VERSION = "v0.2"
 
 var PRODUCTION_VERSION_ = true
 
 // var TEMPLATE_FOLDER_ID_ = '1sY-8EfiejACOQjfHneCqdFDmOsC4_t4V' // TestClient1
 // var TEMPLATE_FOLDER_ID_ = '1Vs45K7yA6e8xX6QLxgJ5K8xWTzEjmXyT' // Non-Shared Folder + File Tree
 var TEMPLATE_FOLDER_ID_ = '10PBmG9N_cT07YJb8bUEduQRqSs0IteBV' // Staff_Data_Folder_Tree
+// var TEMPLATE_FOLDER_ID_ = '1STe6zYv3I19hD0B7T6ob2MZgF0YLcJsL' // Setup_v0.1.dev_ajr
 
 // var CLIENT_FOLDER_ID_ = '1CUCYOl6WCYiwRvoOocmw8V6Jwci_W67j' // Folders_Template
 var CLIENT_FOLDER_ID_ = '1FlXJFEiUmdmWKwqPftutKj6raDYo3WSx' // TestClient5
@@ -36,7 +37,7 @@ var CLIENT_FOLDER_ID_ = '1FlXJFEiUmdmWKwqPftutKj6raDYo3WSx' // TestClient5
 // Log Library
 // -----------
 
-var DEBUG_LOG_LEVEL_ = PRODUCTION_VERSION_ ? BBLog.Level.INFO : BBLog.Level.FINER
+var DEBUG_LOG_LEVEL_ = PRODUCTION_VERSION_ ? BBLog.Level.INFO : BBLog.Level.ALL
 var DEBUG_LOG_DISPLAY_FUNCTION_NAMES_ = PRODUCTION_VERSION_ ? BBLog.DisplayFunctionNames.NO : BBLog.DisplayFunctionNames.YES
 
 // Assert library
