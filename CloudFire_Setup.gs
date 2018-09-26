@@ -1,5 +1,4 @@
 // JSHint - TODO
-/* jshint asi: true */
 
 (function() {"use strict"})()
 
@@ -42,8 +41,8 @@ var EVENT_HANDLERS_ = {
   resume:                    ['resume()',                    'Failed to resume',                      resume_],
 }
 
-function onInstall(args) {return eventHandler_(EVENT_HANDLERS_.onInstall, args)}
-function resume(args) {return eventHandler_(EVENT_HANDLERS_.resume, args)}
+function onInstall(args) {return eventHandler_(EVENT_HANDLERS_.onInstall, args)};
+function resume(args) {return eventHandler_(EVENT_HANDLERS_.resume, args)};
 
 // Private Functions
 // =================
@@ -68,24 +67,24 @@ function eventHandler_(config, args) {
 
   try {
 
-    var userEmail = Session.getActiveUser().getEmail()
+    var userEmail = Session.getActiveUser().getEmail();
 
     Log_ = BBLog.getLog({
       level:                DEBUG_LOG_LEVEL_, 
       displayFunctionNames: DEBUG_LOG_DISPLAY_FUNCTION_NAMES_,
-    })
+    });
     
-    Log_.info('Handling ' + config[0] + ' from ' + (userEmail || 'unknown email') + ' (' + SCRIPT_NAME + ' ' + SCRIPT_VERSION + ')')
+    Log_.info('Handling ' + config[0] + ' from ' + (userEmail || 'unknown email') + ' (' + SCRIPT_NAME + ' ' + SCRIPT_VERSION + ')');
     
     // Call the main function
-    return config[2](args)
+    return config[2](args);
     
   } catch (error) {
   
-    var handleError = Assert.HandleError.DISPLAY_FULL
+    var handleError = Assert.HandleError.DISPLAY_FULL;
 
     if (!PRODUCTION_VERSION_) {
-      handleError = Assert.HandleError.THROW
+      handleError = Assert.HandleError.THROW;
     }
 
     var assertConfig = {
@@ -97,9 +96,9 @@ function eventHandler_(config, args) {
       emailAddress:   ADMIN_EMAIL_ADDRESS_,
       scriptName:     SCRIPT_NAME,
       scriptVersion:  SCRIPT_VERSION, 
-    }
+    };
 
-    Assert.handleError(assertConfig) 
+    Assert.handleError(assertConfig);
   }
   
 } // eventHandler_()
@@ -117,5 +116,6 @@ function onInstall_() {
 
   Log_.functionEntryPoint();
   Copy_.startCopy(TEMPLATE_FOLDER_ID_);
+  StaffData.initialize();
       
 } // onInstall_() 

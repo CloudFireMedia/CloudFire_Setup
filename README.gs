@@ -1,11 +1,9 @@
-// 34567890123456789012345678901234567890123456789012345678901234567890123456789
-
-// README
-// ======
-//
-// Dev: AndrewRoberts.net
-
-// v1.0
+// v0.2
 // ----
 //
-// * First version
+// * Added Staff_Data initialize()
+
+// v0.1
+// ----
+//
+// * First version with Staff_Data
