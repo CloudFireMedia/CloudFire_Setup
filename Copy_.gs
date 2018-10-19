@@ -19,7 +19,7 @@
 
 var Copy_ = (function(ns) {
   
-  ns.startCopy = function(sourceid) {
+  ns.startCopy = function(sourceid, clientFolderId, fileList, folderList) {
   
     if (!TEST_COPY_FOLDERS_) {
       return;
@@ -29,28 +29,15 @@ var Copy_ = (function(ns) {
     
     // Create the target folder
 
-    var target;
-    
-    if (TEST_DO_NOT_TIMESTAMP_DEST_FOLDER_) {
-
-      target = DriveApp.getFolderById(CLIENT_FOLDER_ID_);    
+    var target = DriveApp.getFolderById(clientFolderId);    
       
-    } else {
-
-      var d = new Date();
-      
-      target = DriveApp
-        .getRootFolder()
-        .createFolder('Copy made ' + d.toLocaleString());
-    } 
-    
     Log_.info('Copying template folder to ' + target.getId());
 
     // Copy the top level files
-    copyFiles(source, target)
+    copyFiles(source, target, fileList);
     
     // Now set the subdirectories to process
-    var subfolders = source.getFolders()
+    var subfolders = source.getFolders();
     var continuationToken = subfolders.getContinuationToken();
     
     var userProperties = PropertiesService.getUserProperties();
@@ -83,6 +70,8 @@ var Copy_ = (function(ns) {
     var baseTargetFolderId = userProperties.getProperty('COPY_FILES_BASE_TARGET_FOLDER_ID');
     var dir;
     var newdir;
+    var fileList = Utils_.getList('Files');
+    var folderList = Utils_.getList('Folders');
     
     // Remove any partially copied directories
     if (lastTargetFolderCreatedId != null) {     
@@ -120,7 +109,7 @@ var Copy_ = (function(ns) {
       Log_.info("Recursing in to " + dir.getName());
       
       userProperties.setProperty('COPY_FILES_LAST_TARGET_FOLDER_ID', newdir.getId());
-      copyFolder(dir, newdir);
+      copyFolder(dir, newdir, fileList, folderList);
     }
     
     // Clean up - we're done
@@ -155,7 +144,7 @@ var Copy_ = (function(ns) {
   }; // Copy_.resume()
 
   // Copies the files from sfolder to dfolder
-  function copyFiles(sfolder, dfolder) {
+  function copyFiles(sfolder, dfolder, fileList) {
     
     var files = sfolder.getFiles();
     var file;
@@ -166,18 +155,18 @@ var Copy_ = (function(ns) {
       fname = file.getName();
       Log_.info("Copying " + fname);
       var newFile = file.makeCopy(fname, dfolder);
-      storeId(FILES, fname, newFile.getId());
+      storeId(fileList, fname, newFile.getId());
     }
     
   }; // Copy_.copyFiles()
   
   // Copies the files and folders
-  function copyFolder(sfolder, dfolder) {
+  function copyFolder(sfolder, dfolder, fileList, folderList) {
     
     var dir;
     var newdir;
     
-    copyFiles(sfolder, dfolder)
+    copyFiles(sfolder, dfolder, fileList)
     
     var dirs = sfolder.getFolders();
     
@@ -185,9 +174,9 @@ var Copy_ = (function(ns) {
       dir = dirs.next();
       var name = dir.getName();
       newdir = dfolder.createFolder(name);
-      storeId(FOLDERS, name, newdir.getId());      
+      storeId(folderList, name, newdir.getId());      
       Log_.info("Recursing in to " + name);
-      var newFolder = copyFolder(dir, newdir);
+      var newFolder = copyFolder(dir, newdir, fileList, folderList);
     }
     
   }; // Copy_.copyFolder()

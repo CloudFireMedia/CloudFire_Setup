@@ -22,17 +22,17 @@
 // =============
 
 var SCRIPT_NAME = "CloudFire"
-var SCRIPT_VERSION = "v0.2"
+var SCRIPT_VERSION = "v0.3"
 
 var PRODUCTION_VERSION_ = true
 
-// var TEMPLATE_FOLDER_ID_ = '1sY-8EfiejACOQjfHneCqdFDmOsC4_t4V' // TestClient1
-// var TEMPLATE_FOLDER_ID_ = '1Vs45K7yA6e8xX6QLxgJ5K8xWTzEjmXyT' // Non-Shared Folder + File Tree
-var TEMPLATE_FOLDER_ID_ = '10PBmG9N_cT07YJb8bUEduQRqSs0IteBV' // Staff_Data_Folder_Tree
-// var TEMPLATE_FOLDER_ID_ = '1STe6zYv3I19hD0B7T6ob2MZgF0YLcJsL' // Setup_v0.1.dev_ajr
+var TEMPLATE_FOLDER_ID_ = '15ngSqQeCVeSQOaTko6YXOJN8bmKWYcSr' // PRF_Folder_Tree
 
-// var CLIENT_FOLDER_ID_ = '1CUCYOl6WCYiwRvoOocmw8V6Jwci_W67j' // Folders_Template
-var CLIENT_FOLDER_ID_ = '1FlXJFEiUmdmWKwqPftutKj6raDYo3WSx' // TestClient5
+// var CLIENT_FOLDER_ID_ = '1IZ1HVQh9ZJk8hmR8_hPMQfmrblLzlSUQ' // TestClient6
+// var CLIENT_FOLDER_ID_ = '1xy5mAc2RYULL3RUP8jkvvkncsfbfupT6' // TestClient7_PRF
+// var CLIENT_FOLDER_ID_ = '1wmf--I5j8aMm0HlfVWA9ChWsiaf5FrKN' // 
+
+var CONFIG_SHEET_TEMPLATE_ID_ = '1vRyyGhRocfodkQZdlfjeCz59yCHnxwr-OFNROYF62F8' // CloudFire_Config_Template
 
 // Log Library
 // -----------
@@ -53,7 +53,6 @@ var ADMIN_EMAIL_ADDRESS_ = ''
 
 var TEST_CREATE_TRIGGERS_              = false
 var TEST_DO_NOT_USE_TEST_FOLDER_TREE_  = true
-var TEST_DO_NOT_TIMESTAMP_DEST_FOLDER_ = true
 var TEST_COPY_FOLDERS_                 = true
 var TEST_SEND_CONF_EMAIL_              = false
 
@@ -65,15 +64,6 @@ var TEST_SEND_CONF_EMAIL_              = false
 
 // Constants/Enums
 // ===============
-
-var FILES = {
-  'Promotion_Deadlines_Calendar' : 'PROMOTION_DEADLINES_CALENDAR_ID',
-  'Staff_Data'                   : 'STAFF_DATA_SHEET_ID',
-}
-
-var FOLDERS = {
-  'Staff' : 'STAFF_FOLDER_ID',
-}
 
 // Function Template
 // -----------------
