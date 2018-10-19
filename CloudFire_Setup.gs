@@ -115,7 +115,51 @@ function resume_() {Copy_.resume()}
 function onInstall_() {
 
   Log_.functionEntryPoint();
-  Copy_.startCopy(TEMPLATE_FOLDER_ID_);
-  StaffData.initialize();
-      
+  var ui = SpreadsheetApp.getUi()
+
+  // Ask where the copy is to be made to
+  
+  do {
+  
+    var response = ui.prompt('What\'s the ID of the destination folder')
+    var clientFolderId = response.getResponseText()
+
+  } while (clientFolderId === '') 
+
+  // Get a copy of the config sheet template and put it in the client's folder
+  
+  var configSheet = SpreadsheetApp.openById(CONFIG_SHEET_TEMPLATE_ID_).copy('Config Sheet')
+  var configSheetId = configSheet.getId()
+  var configSheetFile = DriveApp.getFileById(configSheetId)
+  var configSheetParentFolder = configSheetFile.getParents().next()
+  DriveApp.getFolderById(clientFolderId).addFile(configSheetFile)
+  configSheetParentFolder.removeFile(configSheetFile)
+  
+  Log_.info('Created Config sheet ' + configSheetId)
+  
+  // Register this user to it
+  
+  var user = Session.getEffectiveUser().getEmail()
+  
+  if (user === '') {
+  
+    Log_.warning('Failed to register user with config sheet')
+    
+  } else {
+  
+    Config.initialise({
+      email: user,
+      spreadsheetId: configSheetId,
+    })
+    
+    Log_.info('Registered ' + user + ' on sheet ' + configSheetId)
+  }
+  
+  // Copy the template folder tree 
+  
+  var fileList = Utils_.getList('Files');
+  var folderList = Utils_.getList('Folders');
+  Copy_.startCopy(TEMPLATE_FOLDER_ID_, clientFolderId, fileList, folderList);
+  ui.alert('CloudFire successfully installed to ' + clientFolderId)
+  
 } // onInstall_() 
