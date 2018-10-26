@@ -22,17 +22,9 @@
 // =============
 
 var SCRIPT_NAME = "CloudFire"
-var SCRIPT_VERSION = "v0.3"
+var SCRIPT_VERSION = "v0.4"
 
 var PRODUCTION_VERSION_ = true
-
-var TEMPLATE_FOLDER_ID_ = '15ngSqQeCVeSQOaTko6YXOJN8bmKWYcSr' // PRF_Folder_Tree
-
-// var CLIENT_FOLDER_ID_ = '1IZ1HVQh9ZJk8hmR8_hPMQfmrblLzlSUQ' // TestClient6
-// var CLIENT_FOLDER_ID_ = '1xy5mAc2RYULL3RUP8jkvvkncsfbfupT6' // TestClient7_PRF
-// var CLIENT_FOLDER_ID_ = '1wmf--I5j8aMm0HlfVWA9ChWsiaf5FrKN' // 
-
-var CONFIG_SHEET_TEMPLATE_ID_ = '1vRyyGhRocfodkQZdlfjeCz59yCHnxwr-OFNROYF62F8' // CloudFire_Config_Template
 
 // Log Library
 // -----------
@@ -45,7 +37,7 @@ var DEBUG_LOG_DISPLAY_FUNCTION_NAMES_ = PRODUCTION_VERSION_ ? BBLog.DisplayFunct
 
 var SEND_ERROR_EMAIL_ = PRODUCTION_VERSION_ ? true : false
 var HANDLE_ERROR_ = Assert.HandleError.THROW
-var ADMIN_EMAIL_ADDRESS_ = ''
+var ADMIN_EMAIL_ADDRESS_ = 'dev@cloudFire.media'
 
 // Tests
 // -----

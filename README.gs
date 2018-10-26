@@ -1,3 +1,13 @@
+// v0.4
+// ----
+//
+// * Added Staff Data Add-on
+
+// v0.3
+// ----
+//
+// * Added Promotion Request Form
+
 // v0.2
 // ----
 //
