@@ -116,22 +116,29 @@ function onInstall_() {
 
   Log_.functionEntryPoint();
   var ui = SpreadsheetApp.getUi()
+  var settingsSheet = SpreadsheetApp.getActive().getSheetByName('Settings')
 
   // Ask where the copy is to be made to
   
   do {
   
-    var response = ui.prompt('What\'s the ID of the destination folder')
+    var response = ui.prompt('What\'s the ID of the destination folder', ui.ButtonSet.OK_CANCEL)
     var clientFolderId = response.getResponseText()
+    
+    if (response.getSelectedButton() == ui.Button.CANCEL) {
+      return
+    }
 
   } while (clientFolderId === '') 
 
   // Get a copy of the config sheet template and put it in the client's folder
   
-  var configSheet = SpreadsheetApp.openById(CONFIG_SHEET_TEMPLATE_ID_).copy('Config Sheet')
-  var configSheetId = configSheet.getId()
-  var configSheetFile = DriveApp.getFileById(configSheetId)
+  var configSheetTemplateId   = settingsSheet.getRange('A2').getValue()
+  var configSheet             = SpreadsheetApp.openById(configSheetTemplateId).copy('Config Sheet')
+  var configSheetId           = configSheet.getId()
+  var configSheetFile         = DriveApp.getFileById(configSheetId)
   var configSheetParentFolder = configSheetFile.getParents().next()
+  
   DriveApp.getFolderById(clientFolderId).addFile(configSheetFile)
   configSheetParentFolder.removeFile(configSheetFile)
   
@@ -159,7 +166,8 @@ function onInstall_() {
   
   var fileList = Utils_.getList('Files');
   var folderList = Utils_.getList('Folders');
-  Copy_.startCopy(TEMPLATE_FOLDER_ID_, clientFolderId, fileList, folderList);
+  var templateFolderId = settingsSheet.getRange('A3').getValue()
+  Copy_.startCopy(templateFolderId, clientFolderId, fileList, folderList);
   ui.alert('CloudFire successfully installed to ' + clientFolderId)
   
 } // onInstall_() 
