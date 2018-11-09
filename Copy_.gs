@@ -19,6 +19,14 @@
 
 var Copy_ = (function(ns) {
   
+  /**
+   * 
+   * @param {string} sourceid
+   * @param {string} clientFolderId
+   * @param {array} fileList
+   * @param {array} folderList
+   */
+  
   ns.startCopy = function(sourceid, clientFolderId, fileList, folderList) {
   
     if (!TEST_COPY_FOLDERS_) {
@@ -59,7 +67,10 @@ var Copy_ = (function(ns) {
         
   }; // Copy_.startCopy()
     
-  // Resume the copy
+  /**
+   * Resume the copy
+   */
+   
   ns.resume = function(e) {
     
     Log_.fine('resume trigger');
@@ -147,20 +158,27 @@ var Copy_ = (function(ns) {
   function copyFiles(sfolder, dfolder, fileList) {
     
     var files = sfolder.getFiles();
-    var file;
-    var fname;
     
     while(files.hasNext()) {
-      file = files.next();
-      fname = file.getName();
-      Log_.info("Copying " + fname);
-      var newFile = file.makeCopy(fname, dfolder);
-      storeId(fileList, fname, newFile.getId());
+      var file = files.next();
+      var filename = file.getName();
+      var shortFilename = Utils_.getFilename(filename);
+      Log_.info("Copying " + shortFilename);
+      var newFile = file.makeCopy(filename, dfolder);
+      storeId(fileList, shortFilename, newFile.getId());
     }
     
   }; // Copy_.copyFiles()
   
-  // Copies the files and folders
+  /**
+   * Copies the files and folders
+   *
+   * @param {Folder} sfolder
+   * @param {Folder} dfolder
+   * @param {Files} fileList
+   * @param {Folder} folderList
+   */
+   
   function copyFolder(sfolder, dfolder, fileList, folderList) {
     
     var dir;
@@ -170,7 +188,7 @@ var Copy_ = (function(ns) {
     
     var dirs = sfolder.getFolders();
     
-    while(dirs.hasNext()) {
+    while (dirs.hasNext()) {
       dir = dirs.next();
       var name = dir.getName();
       newdir = dfolder.createFolder(name);
@@ -184,6 +202,10 @@ var Copy_ = (function(ns) {
   /**
    * Check the list of files or folders for a matching name,
    * and store the ID in the config sheet
+   *
+   * @param {object} list
+   * @param {string} name
+   * @param {string} id
    */
 
   function storeId(list, name, id) {

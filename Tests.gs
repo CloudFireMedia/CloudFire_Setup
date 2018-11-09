@@ -3,8 +3,6 @@
 // Tests.gs
 // ========
 //
-// Dev: AndrewRoberts.net
-//
 // Code for internal/unit testing
 
 function TEST_logInit() {
@@ -15,17 +13,14 @@ function TEST_logInit() {
   })
 }
 
-function TEST_misc() {
-  var getFunction = 'getFoldersByName'
-  var rootFolder = DriveApp.getRootFolder()
-  foo()
-  return
+function TEST_getFileName() {
+
+  var input = "  a v va v93 v. v28. v.b v39a dv1.1 v19.32 c" 
+  var expectedOutput = "a v va v93 v. v28. v.b v39a dv1.1"
+  var output = Utils_.getFileName(input)
   
-  function foo() {  
-    var nextItems = rootFolder[getFunction](' Admin');
-  //  var nextItems = DriveApp.getRootFolder().getFoldersByName(' Admin');
-    var item = nextItems.next().getName()
-    debugger
+  if (output !== expectedOutput) {
+    throw new Error('FAIL')
   }
 }
 
