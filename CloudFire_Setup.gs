@@ -2,10 +2,8 @@
 
 (function() {"use strict"})()
 
-// GAS_Framework.gs
-// ================
-//
-// Dev: AndrewRoberts.net
+// CloudFire_Setup.gs
+// ==================
 //
 // External interface to this script - all of the event handlers.
 //

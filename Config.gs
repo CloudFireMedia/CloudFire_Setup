@@ -14,15 +14,13 @@
 // Config.gs
 // =========
 //
-// Dev: AndrewRoberts.net
-//
 // All the constants and configuration settings
 
 // Configuration
 // =============
 
 var SCRIPT_NAME = "CloudFire"
-var SCRIPT_VERSION = "v0.4"
+var SCRIPT_VERSION = "v0.5"
 
 var PRODUCTION_VERSION_ = true
 

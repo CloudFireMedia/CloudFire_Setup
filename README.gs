@@ -1,3 +1,8 @@
+// v0.5
+// ----
+//
+// * Remove version number from filename
+
 // v0.4
 // ----
 //
