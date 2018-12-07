@@ -13,6 +13,12 @@ function TEST_logInit() {
   })
 }
 
+function TEST_misc() {
+  var a = '[ MM.dd ] Sunday'
+  var b = a.slice(0, 9)
+  debugger
+}
+
 function TEST_getFileName() {
 
   var input = "  a v va v93 v. v28. v.b v39a dv1.1 v19.32 c" 

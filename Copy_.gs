@@ -164,10 +164,165 @@ var Copy_ = (function(ns) {
       var filename = file.getName();
       var shortFilename = Utils_.getFilename(filename);
       Log_.info("Copying " + shortFilename);
-      var newFile = file.makeCopy(filename, dfolder);
+      var newFile = makeCopy(filename, dfolder);
       storeId(fileList, shortFilename, newFile.getId());
     }
     
+    return
+    
+    // Private Functions
+    // -----------------
+    
+    /**
+     * Make a copy of the original file
+     *
+     * @param {string} filename 
+     * @param {Folder} dfolder
+     *
+     * @return {File}
+     */
+     
+    function makeCopy(filename, dfolder) {
+    
+      Log_.functionEntryPoint()
+      
+      // Check for an Announcement GDoc - some start with "[ MM.dd ]"
+      
+      if (filename.slice(0, 9) === '[ MM.dd ]') {
+      
+        Log_.fine('Found Announcement GDoc: "' + filename + '"')
+        
+        var titles = getWeekTitles()
+        
+        if (filename.indexOf('0 Weeks') !== -1) {
+          
+          filename = titles.thisSunday
+          Log_.fine('Found Announcement 0 week: "' + filename + '"')
+          
+        } else if (filename.indexOf('1 Week') !== -1) {
+          
+          filename = titles.nextSunday
+          Log_.fine('Found Announcement 1 week: ' + filename + '"')
+          
+        } else if (filename.indexOf('Draft Document') !== -1) {
+          
+          filename = titles.draftSunday
+          Log_.fine('Found Announcement draft: ' + filename + '"')
+          
+        } else {
+          
+          throw new Error('Unexpected Announcement GDoc: "' + filename + '"')
+        }
+      }
+
+      var newFile = file.makeCopy(filename, dfolder);
+
+      return newFile;
+      
+      // Private Functions
+      // -----------------
+      
+      function getWeekTitles() {
+    
+        //get dates for next three Sundays
+        var thisSunday = getUpcomingSunday(null, true)
+        var nextSunday = dateAdd(thisSunday, 'week', 1)
+        var draftSunday = dateAdd(thisSunday, 'week', 2)
+        
+        //get title for each date
+        var thisSundayTitle = fDate(thisSunday, "[ MM.dd ] 'Sunday Announcements'")
+        var nextSundayTitle = fDate(nextSunday, "[ MM.dd ] 'Sunday Announcements'")
+        var draftSundayTitle = fDate(draftSunday, "[ MM.dd ] 'Sunday Announcements - Draft Document'")
+        
+        var out = {
+          thisSunday  : thisSundayTitle,
+          nextSunday  : nextSundayTitle,
+          draftSunday : draftSundayTitle,
+          dates:{
+            thisSunday  : thisSunday,
+            nextSunday  : nextSunday,
+            draftSunday : draftSunday,
+          }
+        }
+        
+        return out
+        
+        // Private Functions
+        // -----------------
+        
+        /**
+         * Return the next Sunday, which might be today
+         *
+         * @param {Date} date
+         * @param {boolean} skipTodayIfSunday - skips this Sunday and returns next week Sunday
+         *
+         * @return {Date} upcoming Sunday
+         */
+        
+        function getUpcomingSunday(date, skipTodayIfSunday) {
+        
+          // Clone the date so as not to change the original
+          date = new Date(date || new Date())
+          date.setHours(0,0,0,0)
+          
+          // If it's not a Sunday...
+          if (skipTodayIfSunday || date.getDay() > 0) {
+          
+            // Subtract days to get to Sunday then add a week
+            date.setDate(date.getDate() -date.getDay() +7)           
+          }
+            
+          return date;
+          
+        } // Copy_.copyFiles.makeCopy.getWeekTitles.getUpcomingSunday()
+        
+        /**
+         * Add time to a date in specified interval
+         * Negative values work as well
+         *
+         * @param {Sate} javascript datetime object
+         * @param {interval} text interval name [year|quarter|month|week|day|hour|minute|second]
+         * @param {number} integer units of interval to add to date
+         *
+         * @return {date object} 
+         */
+        
+        function dateAdd(date, interval, units) {
+          date = new Date(date); //don't change original date
+          switch(interval.toLowerCase()) {
+            case 'year'   :  date.setFullYear(date.getFullYear() + units);            break;
+            case 'quarter':  date.setMonth   (date.getMonth()    + units*3);          break;
+            case 'month'  :  date.setMonth   (date.getMonth()    + units);            break;
+            case 'week'   :  date.setDate    (date.getDate()     + units*7);          break;
+            case 'day'    :  date.setDate    (date.getDate()     + units);            break;
+            case 'hour'   :  date.setTime    (date.getTime()     + units*60*60*1000); break;
+            case 'minute' :  date.setTime    (date.getTime()     + units*60*1000);    break;
+            case 'second' :  date.setTime    (date.getTime()     + units*1000);       break;
+            default       :  date = undefined; break;
+          }
+          return date;
+          
+        } // Copy_.copyFiles.makeCopy.getWeekTitles.dateAdd()
+  
+        /**
+         * @param {Date} date
+         * @param {string} format
+         *
+         * @return {string} the date formatted with format, default to today if date not provided
+         */
+         
+        function fDate(date, format) {
+        
+          date = date || new Date();
+          format = format || "MM/dd/yy";
+          return Utilities.formatDate(new Date(date), Session.getScriptTimeZone(), format)
+          
+        } // Copy_.copyFiles.makeCopy.getWeekTitles.fDate()
+
+      } // Copy_.copyFiles.makeCopy.getWeekTitles()
+          
+    } // Copy_.copyFiles.makeCopy() 
+       
   }; // Copy_.copyFiles()
   
   /**
