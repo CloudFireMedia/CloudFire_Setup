@@ -1,5 +1,5 @@
 {
-  "timeZone": "Europe/London",
+  "timeZone": "America/Chicago",
   "dependencies": {
     "libraries": [{
       "userSymbol": "BBLog",
@@ -16,7 +16,7 @@
     }, {
       "userSymbol": "Config",
       "libraryId": "1oO44r3nax5MO1XsI1hlr4ZM0OtPVCQKgDYUe08ej_SkIKn9uvzZ6WKQl",
-      "version": "7"
+      "version": "9"
     }]
   },
   "exceptionLogging": "STACKDRIVER"

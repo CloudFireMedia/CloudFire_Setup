@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "CloudFire"
-var SCRIPT_VERSION = "v0.5"
+var SCRIPT_VERSION = "v0.6"
 
 var PRODUCTION_VERSION_ = true
 
