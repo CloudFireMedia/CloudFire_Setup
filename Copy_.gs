@@ -108,7 +108,7 @@ var Copy_ = (function(ns) {
     }
     
     var subfolders = DriveApp.continueFolderIterator(continuationToken);
-    var dfolder = DriveApp.getFolderById(baseTargetFolderId);
+    var destinationFolder = DriveApp.getFolderById(baseTargetFolderId);
     
     while (subfolders.hasNext()) {  
       
@@ -116,7 +116,7 @@ var Copy_ = (function(ns) {
       userProperties.setProperty('COPY_FILES_CONTINUATION_TOKEN', continuationToken);    
       
       dir = subfolders.next();
-      newdir = dfolder.createFolder(dir.getName());
+      newdir = destinationFolder.createFolder(dir.getName());
       Log_.info("Recursing in to " + dir.getName());
       
       userProperties.setProperty('COPY_FILES_LAST_TARGET_FOLDER_ID', newdir.getId());
@@ -154,17 +154,17 @@ var Copy_ = (function(ns) {
     
   }; // Copy_.resume()
 
-  // Copies the files from sfolder to dfolder
-  function copyFiles(sfolder, dfolder, fileList) {
+  // Copies the files from sourceFolder to destinationFolder
+  function copyFiles(sourceFolder, destinationFolder, fileList) {
     
-    var files = sfolder.getFiles();
+    var files = sourceFolder.getFiles();
     
     while(files.hasNext()) {
       var file = files.next();
       var filename = file.getName();
       var shortFilename = Utils_.getFilename(filename);
       Log_.info("Copying " + shortFilename);
-      var newFile = makeCopy(filename, dfolder);
+      var newFile = makeCopy(filename, destinationFolder);
       storeId(fileList, shortFilename, newFile.getId());
     }
     
@@ -177,12 +177,12 @@ var Copy_ = (function(ns) {
      * Make a copy of the original file
      *
      * @param {string} filename 
-     * @param {Folder} dfolder
+     * @param {Folder} destinationFolder
      *
      * @return {File}
      */
      
-    function makeCopy(filename, dfolder) {
+    function makeCopy(filename, destinationFolder) {
     
       Log_.functionEntryPoint()
       
@@ -215,7 +215,7 @@ var Copy_ = (function(ns) {
         }
       }
 
-      var newFile = file.makeCopy(filename, dfolder);
+      var newFile = file.makeCopy(filename, destinationFolder);
 
       return newFile;
       
@@ -251,32 +251,6 @@ var Copy_ = (function(ns) {
         // -----------------
         
         /**
-         * Return the next Sunday, which might be today
-         *
-         * @param {Date} date
-         * @param {boolean} skipTodayIfSunday - skips this Sunday and returns next week Sunday
-         *
-         * @return {Date} upcoming Sunday
-         */
-        
-        function getUpcomingSunday(date, skipTodayIfSunday) {
-        
-          // Clone the date so as not to change the original
-          date = new Date(date || new Date())
-          date.setHours(0,0,0,0)
-          
-          // If it's not a Sunday...
-          if (skipTodayIfSunday || date.getDay() > 0) {
-          
-            // Subtract days to get to Sunday then add a week
-            date.setDate(date.getDate() -date.getDay() +7)           
-          }
-            
-          return date;
-          
-        } // Copy_.copyFiles.makeCopy.getWeekTitles.getUpcomingSunday()
-        
-        /**
          * Add time to a date in specified interval
          * Negative values work as well
          *
@@ -304,21 +278,6 @@ var Copy_ = (function(ns) {
           
         } // Copy_.copyFiles.makeCopy.getWeekTitles.dateAdd()
   
-        /**
-         * @param {Date} date
-         * @param {string} format
-         *
-         * @return {string} the date formatted with format, default to today if date not provided
-         */
-         
-        function fDate(date, format) {
-        
-          date = date || new Date();
-          format = format || "MM/dd/yy";
-          return Utilities.formatDate(new Date(date), Session.getScriptTimeZone(), format)
-          
-        } // Copy_.copyFiles.makeCopy.getWeekTitles.fDate()
-
       } // Copy_.copyFiles.makeCopy.getWeekTitles()
           
     } // Copy_.copyFiles.makeCopy() 
@@ -328,29 +287,57 @@ var Copy_ = (function(ns) {
   /**
    * Copies the files and folders
    *
-   * @param {Folder} sfolder
-   * @param {Folder} dfolder
+   * @param {Folder} sourceFolder - Source folder
+   * @param {Folder} destinationFolder - Destination folder
    * @param {Files} fileList
    * @param {Folder} folderList
    */
    
-  function copyFolder(sfolder, dfolder, fileList, folderList) {
+  function copyFolder(sourceFolder, destinationFolder, fileList, folderList) {
     
-    var dir;
-    var newdir;
+    var nextSourceFolder;
+    var nextDestinationFolder;
     
-    copyFiles(sfolder, dfolder, fileList)
+    copyFiles(sourceFolder, destinationFolder, fileList)
     
-    var dirs = sfolder.getFolders();
+    var folders = sourceFolder.getFolders();
     
-    while (dirs.hasNext()) {
-      dir = dirs.next();
-      var name = dir.getName();
-      newdir = dfolder.createFolder(name);
-      storeId(folderList, name, newdir.getId());      
-      Log_.info("Recursing in to " + name);
-      var newFolder = copyFolder(dir, newdir, fileList, folderList);
+    while (folders.hasNext()) {
+    
+      nextSourceFolder = folders.next();
+      var nextSourceFolderName = nextSourceFolder.getName();
+      var updatedNextFolderName = updateFolderName(nextSourceFolderName);
+      nextDestinationFolder = destinationFolder.createFolder(updatedNextFolderName);
+      storeId(folderList, nextSourceFolderName, nextDestinationFolder.getId());      
+      Log_.info("Recursing in to " + nextSourceFolderName);
+      var newFolder = copyFolder(nextSourceFolder, nextDestinationFolder, fileList, folderList);
     }
+    
+    // Private Function
+    // ----------------
+      
+    /**
+     * Update SERVICE_SLIDES_NAME folder name
+     *
+     * @param {string} oldFolderName
+     *
+     * @return {string} newFolderName
+     */
+     
+    function updateFolderName(oldFolderName) {
+    
+      Log_.functionEntryPoint(oldFolderName);
+      
+      var newFolderName = oldFolderName;
+      
+      if (oldFolderName.indexOf('[ yyyy.MM.dd ] Service Slides') !== -1) {       
+        var thisSunday = getUpcomingSunday(null, true);
+        var newFolderName = fDate(thisSunday, "[ yyyy.MM.dd ] 'Service Slides'") 
+      }
+      
+      return newFolderName;
+    
+    } // Copy_.copyFolder.updateFolderName() 
     
   }; // Copy_.copyFolder()
 
@@ -385,6 +372,47 @@ var Copy_ = (function(ns) {
     } // for each item in the list
     
   } // Copy_.storeId() 
+  
+  /**
+  * Return the next Sunday, which might be today
+  *
+  * @param {Date} date
+  * @param {boolean} skipTodayIfSunday - skips this Sunday and returns next week Sunday
+  *
+  * @return {Date} upcoming Sunday
+  */
+  
+  function getUpcomingSunday(date, skipTodayIfSunday) {
+    
+    // Clone the date so as not to change the original
+    date = new Date(date || new Date())
+    date.setHours(0,0,0,0)
+    
+    // If it's not a Sunday...
+    if (skipTodayIfSunday || date.getDay() > 0) {
+      
+      // Subtract days to get to Sunday then add a week
+      date.setDate(date.getDate() - date.getDay() + 7)           
+    }
+    
+    return date;
+    
+  } // Copy_.getUpcomingSunday()
+  
+  /**
+   * @param {Date} date
+   * @param {string} format
+   *
+   * @return {string} the date formatted with format, default to today if date not provided
+   */
+  
+  function fDate(date, format) {
+    
+    date = date || new Date();
+    format = format || "MM/dd/yy";
+    return Utilities.formatDate(new Date(date), Session.getScriptTimeZone(), format)
+    
+  } // Copy_.fDate()
   
   return ns
 

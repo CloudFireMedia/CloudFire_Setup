@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "CloudFire"
-var SCRIPT_VERSION = "v0.6"
+var SCRIPT_VERSION = "v0.6.dev_ajr"
 
 var PRODUCTION_VERSION_ = true
 
@@ -68,7 +68,7 @@ var TEST_SEND_CONF_EMAIL_              = false
 /* 
 function functionTemplate() {
 
-  Log_.functionEntryPoint()
+  Log_.functionEntryPoint();
   
   
 
